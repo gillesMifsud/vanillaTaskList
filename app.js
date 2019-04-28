@@ -10,8 +10,14 @@ const submitBtn = document.getElementById('submitBtn');
 loadAllEventListeners();
 // Load event listeners
 function loadAllEventListeners() {
-    // Add task
+    // Add task event
     form.addEventListener('submit', addTask);
+    // Remove task event
+    taskList.addEventListener('click', removeTask);
+    // Clear all
+    clearBtn.addEventListener('click', clearTasks);
+    // Filter tasks
+    filter.addEventListener('keyup', filterTasks)
 }
 
 function addTask(e) {
@@ -32,14 +38,40 @@ function addTask(e) {
     link.innerHTML = '<i class="fa fa-remove"></i>';
     // Append link to li
     li.appendChild(link);
-
     // Append li to ul
     taskList.appendChild(li);
-
     // Clear input 
     taskInput.value = '';
-
+    // Prevent default
     e.preventDefault();
 }
 
-console.log('Loaded')
+function removeTask(e) {
+    // As the element clicked is a <i></i> inside the <a></a>
+    // We must target the <li></li> which is the parent of the parent to delete
+    if(e.target.parentElement.classList.contains('delete-item')) {
+        if(confirm('Are you sure?')) {
+            e.target.parentElement.parentElement.remove();
+        }
+    }
+}
+
+function clearTasks() {
+    while(taskList.firstChild) {
+        taskList.removeChild(taskList.firstChild);
+    }
+}
+
+function filterTasks(e) {
+    const text = e.target.value.toLowerCase();
+
+    document.querySelectorAll('.collection-item').forEach
+        (function(task) {
+            const item = task.firstChild.textContent;
+            if(item.toLowerCase().indexOf(text) != -1) {
+                task.style.display = 'block';
+            } else {
+                task.style.display = 'none';
+            }
+    });
+}
